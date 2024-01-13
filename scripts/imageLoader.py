@@ -2,12 +2,14 @@ import os
 import cv2
 from sklearn.utils import shuffle
 import numpy as np
+from skimage.color import rgb2gray
 
 
 class ImageLoader:
-    def __init__(self, test_directory=r"../data/test/", train_directory=r"../data/train/"):
+    def __init__(self, test_directory=r"../data/test/", train_directory=r"../data/train/", greyscale=False):
         self.test_directory = test_directory
         self.train_directory = train_directory
+        self.greyscale = greyscale
         self.Images = []
         self.Labels = []
         self.label = 0
@@ -29,6 +31,8 @@ class ImageLoader:
 
             for image_file in os.listdir(directory + labels):
                 image = cv2.imread(directory + labels + r'/' + image_file)
+                if self.greyscale is True:
+                    image = rgb2gray(image)
                 image = cv2.resize(image, (100, 100))
                 self.Images.append(image)
                 self.Labels.append(self.label)
