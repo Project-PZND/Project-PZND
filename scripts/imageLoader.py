@@ -3,10 +3,11 @@ import cv2
 from sklearn.utils import shuffle
 import numpy as np
 from skimage.color import rgb2gray
-
+import tensorflow as tf
+from tensorflow import keras
 
 class ImageLoader:
-    def __init__(self, test_directory=r"../data/test/", train_directory=r"../data/train/", greyscale=False):
+    def __init__(self, test_directory=r"../data/test_images/", train_directory=r"../data/train_images/", greyscale=False):
         self.test_directory = test_directory
         self.train_directory = train_directory
         self.greyscale = greyscale
@@ -33,6 +34,7 @@ class ImageLoader:
                 image = cv2.imread(directory + labels + r'/' + image_file)
                 if self.greyscale is True:
                     image = rgb2gray(image)
+
                 image = cv2.resize(image, (100, 100))
                 self.Images.append(image)
                 self.Labels.append(self.label)
@@ -50,3 +52,31 @@ class ImageLoader:
         train_images = np.array(x_train) / 255
         train_labels = np.array(y_train)
         return train_images, train_labels
+
+    def get_tensor_train(self, validation_split=0.2, batch_size=32, image_size=(100, 100)):
+        tensor_train_ds = tf.keras.utils.image_dataset_from_directory(
+            self.train_directory,
+            validation_split=validation_split,
+            subset="training",
+            seed=123,
+            image_size=image_size,
+            batch_size=batch_size)
+        return tensor_train_ds
+
+    def get_tensor_val(self, validation_split=0.2, batch_size=32, image_size=(100, 100)):
+        tensor_val_ds = tf.keras.utils.image_dataset_from_directory(
+            self.train_directory,
+            validation_split=validation_split,
+            subset="validation",
+            seed=123,
+            image_size=image_size,
+            batch_size=batch_size)
+        return tensor_val_ds
+
+    def get_tensor_test(self, batch_size=32, image_size=(100, 100)):
+        tensor_test_ds = tf.keras.utils.image_dataset_from_directory(
+            self.test_directory,
+            seed=123,
+            image_size=image_size,
+            batch_size=batch_size)
+        return tensor_test_ds
