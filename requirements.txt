@@ -4,3 +4,4 @@ scikit-image~=0.20.0
 dm-tree~=0.1.8
 tensorflow~=2.13.1
 opencv-python~=4.9.0.80
+matplotlib~=3.4.3
