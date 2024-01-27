@@ -4,7 +4,8 @@ from sklearn.utils import shuffle
 import numpy as np
 from skimage.color import rgb2gray
 import tensorflow as tf
-from tensorflow import keras
+import matplotlib.pyplot as plt
+
 
 class ImageLoader:
     def __init__(self, test_directory=r"../data/test_images/", train_directory=r"../data/train_images/", greyscale=False):
@@ -80,3 +81,19 @@ class ImageLoader:
             image_size=image_size,
             batch_size=batch_size)
         return tensor_test_ds
+
+    def plot_images(self, dataset, nrows=3, ncols=3):
+        if self.greyscale:
+            cmap = 'gray'
+        else:
+            cmap = None
+        plt.figure(figsize=(10, 10))
+        for images, labels in dataset.take(1):
+            for i in range(nrows*ncols):
+                px = images[i].numpy()
+                if max(px[0][0]) > 1:
+                    px = px.astype('uint8')
+                plt.subplot(nrows, ncols, i + 1)
+                plt.imshow(px, cmap=cmap)
+                plt.axis("off")
+            plt.show()
