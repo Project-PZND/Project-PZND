@@ -4,10 +4,12 @@ from sklearn.utils import shuffle
 import numpy as np
 from skimage.color import rgb2gray
 import tensorflow as tf
-from tensorflow import keras
+import config as cfg
+
 
 class ImageLoader:
-    def __init__(self, test_directory=r"../data/test_images/", train_directory=r"../data/train_images/", greyscale=False):
+    def __init__(self, test_directory=cfg.Images.test_directory, train_directory=cfg.Images.train_directory,
+                 greyscale=False):
         self.test_directory = test_directory
         self.train_directory = train_directory
         self.greyscale = greyscale
