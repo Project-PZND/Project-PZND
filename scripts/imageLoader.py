@@ -15,31 +15,20 @@ class ImageLoader:
         self.greyscale = greyscale
         self.Images = []
         self.Labels = []
-        self.label = 0
 
     def get_images(self, directory):
-        for labels in os.listdir(directory):
-            if labels == 'buildings':
-                self.label = 0
-            elif labels == 'forest':
-                self.label = 1
-            elif labels == 'glacier':
-                self.label = 2
-            elif labels == 'mountain':
-                self.label = 3
-            elif labels == 'sea':
-                self.label = 4
-            elif labels == 'street':
-                self.label = 5
+        for label in os.listdir(directory):
+            label_number = cfg.Labels.label_mapping.get(label)
 
-            for image_file in os.listdir(directory + labels):
-                image = cv2.imread(directory + labels + r'/' + image_file)
+            for image_file in os.listdir(directory + label):
+                image_path = os.path.join(directory, label, image_file)
+                image = cv2.imread(image_path)
                 if self.greyscale is True:
                     image = rgb2gray(image)
 
                 image = cv2.resize(image, (100, 100))
                 self.Images.append(image)
-                self.Labels.append(self.label)
+                self.Labels.append(label_number)
 
         return shuffle(self.Images, self.Labels, random_state=817328462)
 
