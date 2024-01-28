@@ -9,12 +9,12 @@ class ImageDataPreprocessor:
         self.augmentation = augmentation
 
     @staticmethod
-    def __normalize_image():
+    def _normalize_image():
         normalize = tf.keras.layers.Rescaling(1. / 255)
         return normalize
 
     @staticmethod
-    def __augment_image():
+    def _augment_image():
         rotate = cfg.AugmentImageParams.rotate
         zoom = cfg.AugmentImageParams.zoom
         flip = cfg.AugmentImageParams.flip
@@ -36,7 +36,7 @@ class ImageDataPreprocessor:
 
         return augment
 
-    def __resize_image(self):
+    def _resize_image(self):
         resize = tf.keras.layers.Resizing(self.target_size[0], self.target_size[1])
         return resize
 
@@ -45,15 +45,15 @@ class ImageDataPreprocessor:
 
         # Resize image
         if self.target_size:
-            preprocess.add(self.__resize_image())
+            preprocess.add(self._resize_image())
 
         # Normalize image
         if self.normalize:
-            preprocess.add(self.__normalize_image())
+            preprocess.add(self._normalize_image())
 
         # Augment image
         if self.augmentation:
-            preprocess.add(self.__augment_image())
+            preprocess.add(self._augment_image())
 
         preprocessed_dataset = dataset.map(lambda x, y: (preprocess(x, training=True), y))
         return preprocessed_dataset

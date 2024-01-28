@@ -38,15 +38,15 @@ class ImageLoader:
 
         return shuffle(self.Images, self.Labels, random_state=817328462)
 
-    def __get_data(self, directory):
+    def _get_data(self, directory):
         images, labels = self.get_images(directory)
         return np.array(images) / 255, np.array(labels)
 
     def get_test_data(self):
-        return self.__get_data(self.test_directory)
+        return self._get_data(self.test_directory)
 
     def get_train_data(self):
-        return self.__get_data(self.train_directory)
+        return self._get_data(self.train_directory)
 
     def get_tensor_train(self, validation_split=0.2, batch_size=32, image_size=(100, 100)):
         tensor_train_ds = tf.keras.utils.image_dataset_from_directory(
