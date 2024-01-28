@@ -83,6 +83,7 @@ class ImageLoader:
         return tensor_test_ds
 
     def plot_images(self, dataset, num_of_rows=3, num_of_cols=3):
+        class_names = ['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street']
         if self.greyscale:
             cmap = 'gray'
         else:
@@ -95,5 +96,6 @@ class ImageLoader:
                     px = px.astype('uint8')
                 plt.subplot(num_of_rows, num_of_cols, i + 1)
                 plt.imshow(px, cmap=cmap)
+                plt.title(class_names[labels[i]])
                 plt.axis("off")
             plt.show()
