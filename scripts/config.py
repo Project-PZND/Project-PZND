@@ -16,11 +16,11 @@ class Labels:
 
 # Default params for image augmentation
 class AugmentImageParams:
-    rotate = 0.15
-    zoom = (.2, .1)
+    rotate = 0.10
+    zoom = (.15, .1)
     flip = "horizontal"
-    contrast = 0.3
-    brightness = 0.001
+    contrast = 0.1
+    brightness = 0.0001
 
 
 # Default size of loaded image (base images are 150x150 pixels)
