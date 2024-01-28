@@ -12,3 +12,11 @@ class Labels:
         'sea': 4,
         'street': 5
     }
+
+
+class AugmentImageParams:
+    rotate = 0.15
+    zoom = (.2, .1)
+    flip = "horizontal"
+    contrast = 0.3
+    brightness = 0.001
