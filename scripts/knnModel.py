@@ -1,7 +1,6 @@
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, ConfusionMatrixDisplay
 from imageLoader import ImageLoader
-import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -17,8 +16,12 @@ class KNNModel(ImageLoader):
     def flatten(self):
         train_images = self.train_data[0]
         test_images = self.test_data[0]
-        train_flat = np.reshape(train_images, (14034, 30000))
-        test_flat = np.reshape(test_images, (3000, 30000))
+
+        train_nsamples, train_nx, train_ny, train_nrgb = train_images.shape
+        test_nsamples, test_nx, test_ny, test_nrgb = test_images.shape
+
+        train_flat = train_images.reshape(train_nsamples, train_nx*train_ny*train_nrgb)
+        test_flat = test_images.reshape(test_nsamples, test_nx*test_ny*test_nrgb)
         return train_flat, test_flat
 
     def evaluate(self):
