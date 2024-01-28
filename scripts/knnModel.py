@@ -4,12 +4,10 @@ from imageLoader import ImageLoader
 import matplotlib.pyplot as plt
 import numpy as np
 
-class KNNModel(ImageLoader):
+
+class KNNModel:
 
     def __init__(self, k=3):
-        super().__init__()
-        self.train_data = ImageLoader().get_train_data()
-        self.test_data = ImageLoader().get_test_data()
         self.k = k
         self.model = KNeighborsClassifier(n_neighbors=k)
 
@@ -19,7 +17,7 @@ class KNNModel(ImageLoader):
         images = np.array(images)
         labels = np.array(labels)
         nsamples, nx, ny, nrgb = images.shape
-        flat = images.reshape(nsamples, nx*ny*nrgb)
+        flat = images.reshape(nsamples, nx * ny * nrgb)
         return flat, labels
 
     def evaluate(self, train, test):
@@ -31,7 +29,8 @@ class KNNModel(ImageLoader):
         accuracy = accuracy_score(y_test, y_pred)
 
         matrix = confusion_matrix(y_test, y_pred)
-        disp = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street'])
+        disp = ConfusionMatrixDisplay(confusion_matrix=matrix,
+                                      display_labels=['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street'])
 
         print(classification_report(y_pred, y_test))
         disp.plot()
