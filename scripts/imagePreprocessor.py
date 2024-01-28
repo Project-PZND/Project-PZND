@@ -1,4 +1,6 @@
 import tensorflow as tf
+import config as cfg
+
 
 class ImageDataPreprocessor:
     def __init__(self, target_size=(100, 100), normalize=True, augmentation=True):
@@ -6,16 +8,19 @@ class ImageDataPreprocessor:
         self.normalize = normalize
         self.augmentation = augmentation
 
-    def resize_image(self):
-        resize = tf.keras.layers.Resizing(self.target_size[0], self.target_size[1])
-        return resize
-
-    def normalize_image(self):
-        normalize = tf.keras.layers.Rescaling(1./255)
+    @staticmethod
+    def __normalize_image():
+        normalize = tf.keras.layers.Rescaling(1. / 255)
         return normalize
 
-    def augment_image(self, rotate=0.15, zoom=(.2, .1), flip="horizontal", contrast=0.3,
-                      brightness=0.001):
+    @staticmethod
+    def __augment_image():
+        rotate = cfg.AugmentImageParams.rotate
+        zoom = cfg.AugmentImageParams.zoom
+        flip = cfg.AugmentImageParams.flip
+        contrast = cfg.AugmentImageParams.contrast
+        brightness = cfg.AugmentImageParams.brightness
+
         augment = tf.keras.Sequential()
 
         if rotate:
@@ -31,25 +36,24 @@ class ImageDataPreprocessor:
 
         return augment
 
+    def __resize_image(self):
+        resize = tf.keras.layers.Resizing(self.target_size[0], self.target_size[1])
+        return resize
+
     def preprocess(self, dataset):
         preprocess = tf.keras.Sequential()
 
         # Resize image
         if self.target_size:
-            resizing = tf.keras.layers.Resizing(self.target_size[0], self.target_size[1])
-            preprocess.add(resizing)
+            preprocess.add(self.__resize_image())
 
         # Normalize image
         if self.normalize:
-            normalizing = tf.keras.layers.Rescaling(1./255)
-            preprocess.add(normalizing)
+            preprocess.add(self.__normalize_image())
 
         # Augment image
         if self.augmentation:
-            augment = self.augment_image()
-            preprocess.add(augment)
+            preprocess.add(self.__augment_image())
 
         dataset = dataset.map(lambda x, y: (preprocess(x, training=True), y))
         return dataset
-
-
