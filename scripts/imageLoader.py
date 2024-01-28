@@ -28,26 +28,25 @@ class ImageLoader:
             for image_file in os.listdir(directory + label):
                 image_path = os.path.join(directory, label, image_file)
                 image = cv2.imread(image_path)
+
                 if self.greyscale is True:
                     image = rgb2gray(image)
 
-                image = cv2.resize(image, (100, 100))
+                image = cv2.resize(image, (cfg.ImageLoadSize.width, cfg.ImageLoadSize.height))
                 self.Images.append(image)
                 self.Labels.append(label_number)
 
         return shuffle(self.Images, self.Labels, random_state=817328462)
 
+    def __get_data(self, directory):
+        images, labels = self.get_images(directory)
+        return np.array(images) / 255, np.array(labels)
+
     def get_test_data(self):
-        x_test, y_test = self.get_images(self.test_directory)
-        test_images = np.array(x_test) / 255
-        test_labels = np.array(y_test)
-        return test_images, test_labels
+        return self.__get_data(self.test_directory)
 
     def get_train_data(self):
-        x_train, y_train = self.get_images(self.train_directory)
-        train_images = np.array(x_train) / 255
-        train_labels = np.array(y_train)
-        return train_images, train_labels
+        return self.__get_data(self.train_directory)
 
     def get_tensor_train(self, validation_split=0.2, batch_size=32, image_size=(100, 100)):
         tensor_train_ds = tf.keras.utils.image_dataset_from_directory(
