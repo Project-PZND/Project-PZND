@@ -55,5 +55,5 @@ class ImageDataPreprocessor:
         if self.augmentation:
             preprocess.add(self.__augment_image())
 
-        dataset = dataset.map(lambda x, y: (preprocess(x, training=True), y))
-        return dataset
+        preprocessed_dataset = dataset.map(lambda x, y: (preprocess(x, training=True), y))
+        return preprocessed_dataset
