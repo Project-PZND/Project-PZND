@@ -17,6 +17,10 @@ class ImageLoader:
         self.Images = []
         self.Labels = []
 
+    @staticmethod
+    def get_color_mode(grayscale):
+        return "grayscale" if grayscale else "rgb"
+
     def get_images(self, directory):
         for label in os.listdir(directory):
             label_number = cfg.Labels.label_mapping.get(label)
@@ -52,7 +56,9 @@ class ImageLoader:
             subset="training",
             seed=123,
             image_size=image_size,
-            batch_size=batch_size)
+            batch_size=batch_size,
+            color_mode=self.get_color_mode(self.greyscale)
+        )
         return tensor_train_ds
 
     def get_tensor_val(self, validation_split=0.2, batch_size=32, image_size=(100, 100)):
@@ -62,7 +68,9 @@ class ImageLoader:
             subset="validation",
             seed=123,
             image_size=image_size,
-            batch_size=batch_size)
+            batch_size=batch_size,
+            color_mode=self.get_color_mode(self.greyscale)
+        )
         return tensor_val_ds
 
     def get_tensor_test(self, batch_size=32, image_size=(100, 100)):
@@ -70,21 +78,23 @@ class ImageLoader:
             self.test_directory,
             seed=123,
             image_size=image_size,
-            batch_size=batch_size)
+            batch_size=batch_size,
+            color_mode=self.get_color_mode(self.greyscale)
+        )
         return tensor_test_ds
 
-    def plot_images(self, dataset, nrows=3, ncols=3):
+    def plot_images(self, dataset, num_of_rows=3, num_of_cols=3):
         if self.greyscale:
             cmap = 'gray'
         else:
             cmap = None
         plt.figure(figsize=(10, 10))
         for images, labels in dataset.take(1):
-            for i in range(nrows*ncols):
+            for i in range(num_of_rows * num_of_cols):
                 px = images[i].numpy()
                 if max(px[0][0]) > 1:
                     px = px.astype('uint8')
-                plt.subplot(nrows, ncols, i + 1)
+                plt.subplot(num_of_rows, num_of_cols, i + 1)
                 plt.imshow(px, cmap=cmap)
                 plt.axis("off")
             plt.show()
