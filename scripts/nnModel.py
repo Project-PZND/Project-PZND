@@ -3,7 +3,7 @@ from baseNNModel import BaseNNModel
 
 
 class NNModel(BaseNNModel):
-    def __init__(self, input_shape, dense_layers, activations):
+    def __init__(self, dense_layers, activations, input_shape):
         super().__init__()
         self.dense_layers = dense_layers
         self.activations = activations

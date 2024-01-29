@@ -12,6 +12,9 @@ class BaseNNModel:
         self.history = None
 
     def train_model(self, train_data, validation_data=None, epochs=10):
+
+        print("Fitting model...")
+
         x_train = train_data[0]
         y_train = train_data[1]
 
@@ -57,6 +60,7 @@ class BaseNNModel:
             display_labels=cfg.Labels.label_mapping.keys()
         )
         disp.plot()
+        plt.title(str(self.__class__.__name__))
         plt.show()
 
         score, accuracy = self.model.evaluate(
