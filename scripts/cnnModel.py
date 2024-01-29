@@ -19,11 +19,9 @@ class CNNModel(tf.keras.Sequential):
             tf.keras.layers.Dense(6, activation='softmax')
         ])
 
-    def test_model(self, train_data, test_data, validation_data=None):
+    def train_model(self, train_data, validation_data=None, epochs=10):
         x_train = train_data[0]
         y_train = train_data[1]
-        x_test = test_data[0]
-        y_test = test_data[1]
 
         self.model.compile(
             optimizer='adam',
@@ -35,15 +33,12 @@ class CNNModel(tf.keras.Sequential):
             x=x_train,
             y=y_train,
             validation_data=validation_data,
-            epochs=10
+            epochs=epochs
         )
 
-        # history_cnn_1 = self.model.fit(
-        #     train_ds,
-        #     validation_data=val_ds,
-        #     epochs=20,
-        #     verbose=0
-        # )
+    def test_model(self, test_data):
+        x_test = test_data[0]
+        y_test = test_data[1]
 
         y_predicted_probabilities = self.model.predict(x_test)
         y_predicted = np.array(list(map(lambda results: np.argmax(results), y_predicted_probabilities)))
