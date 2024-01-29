@@ -2,13 +2,14 @@ import tensorflow as tf
 import numpy as np
 import config as cfg
 import matplotlib.pyplot as plt
-from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 
 class BaseNNModel:
 
     def __init__(self):
         self.model = None
+        self.history = None
 
     def train_model(self, train_data, validation_data=None, epochs=10):
         x_train = train_data[0]
@@ -20,12 +21,28 @@ class BaseNNModel:
             metrics=['accuracy']
         )
 
-        self.model.fit(
+        self.history = self.model.fit(
             x=x_train,
             y=y_train,
             validation_data=validation_data,
             epochs=epochs
         )
+
+        if validation_data:
+            plt.plot(self.history.history['loss'], label='Train')
+            plt.plot(self.history.history['val_loss'], label='Test')
+            plt.title('Model loss')
+            plt.ylabel('Loss')
+            plt.xlabel('Epochs')
+            plt.legend(['Training loss', 'Validation loss'], loc='upper left')
+            plt.show()
+        else:
+            plt.plot(self.history.history['loss'], label='Train')
+            plt.title('Model loss')
+            plt.ylabel('Loss')
+            plt.xlabel('Epochs')
+            plt.legend(['Training loss'], loc='upper left')
+            plt.show()
 
     def test_model(self, test_data):
         x_test = test_data[0]
@@ -50,12 +67,3 @@ class BaseNNModel:
 
         print('Loss: {}'.format(score))
         print('Accuracy: {}%'.format(round(100 * accuracy, 2)))
-
-    def plot_loss_curve(self):
-        plt.plot(self.model.history['loss'], label='Train')
-        plt.plot(self.model.history['val_loss'], label='Test')
-        plt.title('model loss')
-        plt.ylabel('loss')
-        plt.xlabel('epoch')
-        plt.legend(['train', 'val'], loc='upper left')
-        plt.show()
