@@ -6,42 +6,54 @@ import config as cfg
 
 
 class NNModel:
-    def __init__(self, input_shape, dense_layer, activations,
-                 train_ds, test_ds, val_ds, epochs, batch_size):
-        self.dense_layer = dense_layer
+    def __init__(self, input_shape, dense_layers, activations, epochs):
+        self.dense_layers = dense_layers
         self.activations = activations
-        self.train_ds = train_ds,
-        self.test_ds = test_ds,
-        self.val_ds = val_ds,
-        self.epochs = epochs,
-        self.batch_size = batch_size,
+        self.epochs = epochs
         self.model = tf.keras.models.Sequential([
             tf.keras.layers.Flatten(input_shape=input_shape),
-            [tf.keras.layers.Dense(self.dense_layer[i],
-                                   activation=self.activations[i]) for i in range(len(self.dense_layer))]])
+            *[tf.keras.layers.Dense(
+                dense_layer, activation=activation) for dense_layer, activation in
+                zip(self.dense_layers, self.dense_layers)]
+        ])
 
         self.model.compile(
             optimizer='adam',
-            loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),
+            loss=tf.losses.SparseCategoricalCrossentropy(),
             metrics=['accuracy']
         )
 
-    def train(self):
-        self.model.fit(
-            self.train_ds,
-            validation_data=self.val_ds,
-            epochs=self.epochs,
-            verbose=0
+    def fit_model(self, train_data, validation_data=None):
+
+        x_train = train_data[0]
+        y_train = train_data[1]
+
+        self.model.compile(
+            optimizer='adam',
+            loss=tf.losses.SparseCategoricalCrossentropy(),
+            metrics=['accuracy']
         )
 
-    def evaluate(self):
-        score, accuracy = self.model.evaluate(
-            self.test_ds,
-            batch_size=self.batch_size,
-            verbose=0
+        self.model.fit(
+            x=x_train,
+            y=y_train,
+            validation_data=validation_data,
+            epochs=self.epochs,
         )
-        print('Loss: {}'.format(score))
-        print('Accuracy: {}%'.format(round(100 * accuracy, 2)))
+
+    def test_model(self, test_data):
+        x_test = test_data[0]
+        y_test = test_data[1]
+
+
+    # def evaluate(self):
+    #     score, accuracy = self.model.evaluate(
+    #         self.test_ds,
+    #         batch_size=self.batch_size,
+    #         verbose=0
+    #     )
+    #     print('Loss: {}'.format(score))
+    #     print('Accuracy: {}%'.format(round(100 * accuracy, 2)))
 
     def plot_loss_curve(self):
         plt.plot(self.history.history['loss'], label='Train')
@@ -55,9 +67,7 @@ class NNModel:
     def confusion_matrix(self, test_tensor):
         y_predicted_probabilities = self.model.predict(test_tensor)
         y_predicted_classes = np.array(list(map(lambda results: np.argmax(results), y_predicted_probabilities)))
-        print(y_predicted_classes)
         y_true_classes = np.concatenate([y for x, y in test_tensor], axis=0)
-        print(y_true_classes)
 
         # print('Accuracy: {}%'.format(round(100 * accuracy_score(test_labels, predict_test_cnn_1), 2)))
 
