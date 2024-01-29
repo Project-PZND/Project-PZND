@@ -10,11 +10,11 @@ class NNModel:
                  train_ds, test_ds, val_ds, epochs, batch_size):
         self.dense_layer = dense_layer
         self.activations = activations
-        self.train_ds = train_ds,
-        self.test_ds = test_ds,
-        self.val_ds = val_ds,
-        self.epochs = epochs,
-        self.batch_size = batch_size,
+        self.train_ds = train_ds
+        self.test_ds = test_ds
+        self.val_ds = val_ds
+        self.epochs = epochs
+        self.batch_size = batch_size
         self.model = tf.keras.models.Sequential([
             tf.keras.layers.Flatten(input_shape=input_shape),
             [tf.keras.layers.Dense(self.dense_layer[i],
