@@ -15,5 +15,3 @@ class CNNModel(BaseNNModel):
             tf.keras.layers.Dense(128, activation='relu'),
             tf.keras.layers.Dense(6, activation='softmax')
         ])
-
-
