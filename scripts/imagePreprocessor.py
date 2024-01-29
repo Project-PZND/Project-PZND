@@ -40,7 +40,8 @@ class ImageDataPreprocessor:
         resize = tf.keras.layers.Resizing(self.target_size[0], self.target_size[1])
         return resize
 
-    def preprocess(self, dataset):
+    def preprocess(self, data):
+
         preprocess = tf.keras.Sequential()
 
         # Resize image
@@ -48,12 +49,17 @@ class ImageDataPreprocessor:
             preprocess.add(self._resize_image())
 
         # Normalize image
-        if self.normalize:
+        if self.normalize and isinstance(data, tf.data.Dataset):
             preprocess.add(self._normalize_image())
 
         # Augment image
         if self.augmentation:
             preprocess.add(self._augment_image())
 
-        preprocessed_dataset = dataset.map(lambda x, y: (preprocess(x, training=True), y))
-        return preprocessed_dataset
+        preprocessed_data = None
+        if isinstance(data, tf.data.Dataset):
+            preprocessed_data = data.map(lambda x, y: (preprocess(x, training=True), y))
+        elif isinstance(data, (tuple, list)) and len(data) == 2:
+            preprocessed_data = (preprocess(data[0]), data[1])
+
+        return preprocessed_data

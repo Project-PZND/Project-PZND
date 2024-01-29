@@ -18,7 +18,7 @@ class ImageLoader:
         self.Labels = []
 
     @staticmethod
-    def get_color_mode(grayscale):
+    def _get_color_mode(grayscale):
         return "grayscale" if grayscale else "rgb"
 
     def get_images(self, directory):
@@ -43,9 +43,11 @@ class ImageLoader:
         return np.array(images) / 255, np.array(labels)
 
     def get_test_data(self):
+        print("Loading test data...")
         return self._get_data(self.test_directory)
 
     def get_train_data(self):
+        print("Loading training data...")
         return self._get_data(self.train_directory)
 
     def get_tensor_train(self, validation_split=0.2, batch_size=32, image_size=(100, 100)):
@@ -56,7 +58,7 @@ class ImageLoader:
             seed=123,
             image_size=image_size,
             batch_size=batch_size,
-            color_mode=self.get_color_mode(self.greyscale)
+            color_mode=self._get_color_mode(self.greyscale)
         )
         return tensor_train_ds
 
@@ -68,7 +70,7 @@ class ImageLoader:
             seed=123,
             image_size=image_size,
             batch_size=batch_size,
-            color_mode=self.get_color_mode(self.greyscale)
+            color_mode=self._get_color_mode(self.greyscale)
         )
         return tensor_val_ds
 
@@ -78,9 +80,21 @@ class ImageLoader:
             seed=123,
             image_size=image_size,
             batch_size=batch_size,
-            color_mode=self.get_color_mode(self.greyscale)
+            color_mode=self._get_color_mode(self.greyscale)
         )
         return tensor_test_ds
+
+    @staticmethod
+    def _plot_helper(images, labels, num_of_rows, num_of_cols, class_names, cmap):
+        for i in range(num_of_rows * num_of_cols):
+            px = images[i].numpy() if isinstance(images[i], tf.Tensor) else images[i]
+            if max(px[0][0]) > 1:
+                px = px.astype('uint8')
+            plt.subplot(num_of_rows, num_of_cols, i + 1)
+            plt.imshow(px, cmap=cmap)
+            plt.title(class_names[labels[i]])
+            plt.axis("off")
+        plt.show()
 
     def plot_images(self, dataset, num_of_rows=3, num_of_cols=3):
         class_names = ['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street']
@@ -89,13 +103,11 @@ class ImageLoader:
         else:
             cmap = None
         plt.figure(figsize=(10, 10))
-        for images, labels in dataset.take(1):
-            for i in range(num_of_rows * num_of_cols):
-                px = images[i].numpy()
-                if max(px[0][0]) > 1:
-                    px = px.astype('uint8')
-                plt.subplot(num_of_rows, num_of_cols, i + 1)
-                plt.imshow(px, cmap=cmap)
-                plt.title(class_names[labels[i]])
-                plt.axis("off")
-            plt.show()
+        if isinstance(dataset, tf.data.Dataset):
+            for images, labels in dataset.take(1):
+                self._plot_helper(images, labels, num_of_rows, num_of_cols, class_names, cmap)
+        elif isinstance(dataset, (tuple, list)):
+            images, labels = dataset
+            self._plot_helper(images, labels, num_of_rows, num_of_cols, class_names, cmap)
+        else:
+            raise ValueError("Input must be a tf.data.Dataset, tuple, or list")
