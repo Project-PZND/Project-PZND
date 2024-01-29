@@ -13,7 +13,7 @@ class BaseNNModel:
 
     def train_model(self, train_data, validation_data=None, epochs=10):
 
-        print("Fitting model...")
+        print(f"\nFitting {self.__class__.__name__}...")
 
         x_train = train_data[0]
         y_train = train_data[1]
@@ -69,5 +69,7 @@ class BaseNNModel:
             verbose=0
         )
 
+        print('\n---------------------------')
+        print(f'{self.__class__.__name__}:')
         print('Loss: {}'.format(score))
         print('Accuracy: {}%'.format(round(100 * accuracy, 2)))

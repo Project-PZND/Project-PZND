@@ -7,7 +7,7 @@ import config as cfg
 
 class KNNModel:
 
-    def __init__(self, k=3):
+    def __init__(self, k=10):
         self.k = k
         self.model = KNeighborsClassifier(n_neighbors=k)
 
@@ -35,5 +35,7 @@ class KNNModel:
         plt.title("KNNModel")
         plt.show()
 
+        print('\n---------------------------')
+        print(f'{self.__class__.__name__}:')
         print(classification_report(y_pred, y_test))
         print('Accuracy: {}%'.format(round(100 * accuracy, 2)))
