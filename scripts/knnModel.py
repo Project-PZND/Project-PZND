@@ -16,8 +16,8 @@ class KNNModel:
         images, labels = tuple(zip(*tensor_dataset.unbatch()))
         images = np.array(images)
         labels = np.array(labels)
-        nsamples, nx, ny, nrgb = images.shape
-        flat = images.reshape(nsamples, nx * ny * nrgb)
+        n_samples, nx, ny, n_rgb = images.shape
+        flat = images.reshape(n_samples, nx * ny * n_rgb)
         return flat, labels
 
     def evaluate(self, train, test):
