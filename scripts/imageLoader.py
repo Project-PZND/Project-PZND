@@ -50,7 +50,8 @@ class ImageLoader:
         print("Loading training data...")
         return self._get_data(self.train_directory)
 
-    def get_tensor_train(self, validation_split=0.2, batch_size=32, image_size=(100, 100)):
+    def get_tensor_train(self, validation_split=0.2, batch_size=32,
+                         image_size=(cfg.ImageLoadSize.width, cfg.ImageLoadSize.height)):
         tensor_train_ds = tf.keras.utils.image_dataset_from_directory(
             self.train_directory,
             validation_split=validation_split,
@@ -62,7 +63,8 @@ class ImageLoader:
         )
         return tensor_train_ds
 
-    def get_tensor_val(self, validation_split=0.2, batch_size=32, image_size=(100, 100)):
+    def get_tensor_val(self, validation_split=0.2, batch_size=32,
+                       image_size=(cfg.ImageLoadSize.width, cfg.ImageLoadSize.height)):
         tensor_val_ds = tf.keras.utils.image_dataset_from_directory(
             self.train_directory,
             validation_split=validation_split,
@@ -74,7 +76,7 @@ class ImageLoader:
         )
         return tensor_val_ds
 
-    def get_tensor_test(self, batch_size=32, image_size=(100, 100)):
+    def get_tensor_test(self, batch_size=32, image_size=(cfg.ImageLoadSize.width, cfg.ImageLoadSize.height)):
         tensor_test_ds = tf.keras.utils.image_dataset_from_directory(
             self.test_directory,
             seed=123,
@@ -97,7 +99,7 @@ class ImageLoader:
         plt.show()
 
     def plot_images(self, dataset, num_of_rows=3, num_of_cols=3):
-        class_names = ['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street']
+        class_names = cfg.Labels.label_mapping.keys()
         if self.greyscale:
             cmap = 'gray'
         else:

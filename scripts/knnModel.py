@@ -1,13 +1,13 @@
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, ConfusionMatrixDisplay
-from imageLoader import ImageLoader
 import matplotlib.pyplot as plt
 import numpy as np
+import config as cfg
 
 
 class KNNModel:
 
-    def __init__(self, k=3):
+    def __init__(self, k=10):
         self.k = k
         self.model = KNeighborsClassifier(n_neighbors=k)
 
@@ -30,9 +30,12 @@ class KNNModel:
 
         matrix = confusion_matrix(y_test, y_pred)
         disp = ConfusionMatrixDisplay(confusion_matrix=matrix,
-                                      display_labels=['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street'])
-
-        print(classification_report(y_pred, y_test))
+                                      display_labels=cfg.Labels.label_mapping.keys())
         disp.plot()
+        plt.title("KNNModel")
         plt.show()
-        return accuracy
+
+        print('\n---------------------------')
+        print(f'{self.__class__.__name__}:')
+        print(classification_report(y_pred, y_test))
+        print('Accuracy: {}%'.format(round(100 * accuracy, 2)))
