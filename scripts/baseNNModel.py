@@ -31,25 +31,28 @@ class BaseNNModel:
             epochs=epochs
         )
 
+        plt.figure()
+
         if validation_data:
             plt.plot(self.history.history['loss'], label='Train')
             plt.plot(self.history.history['val_loss'], label='Test')
-            plt.title('Model loss')
+            plt.title(f'{self.__class__.__name__} loss')
             plt.ylabel('Loss')
             plt.xlabel('Epochs')
             plt.legend(['Training loss', 'Validation loss'], loc='upper left')
-            plt.show()
+
         else:
             plt.plot(self.history.history['loss'], label='Train')
-            plt.title('Model loss')
+            plt.title(f'{self.__class__.__name__} loss')
             plt.ylabel('Loss')
             plt.xlabel('Epochs')
             plt.legend(['Training loss'], loc='upper left')
-            plt.show()
 
     def test_model(self, test_data):
         x_test = test_data[0]
         y_test = test_data[1]
+
+        print('\n---------------------------')
 
         y_predicted_probabilities = self.model.predict(x_test)
         y_predicted = np.array(list(map(lambda results: np.argmax(results), y_predicted_probabilities)))
@@ -61,7 +64,6 @@ class BaseNNModel:
         )
         disp.plot()
         plt.title(str(self.__class__.__name__))
-        plt.show()
 
         score, accuracy = self.model.evaluate(
             x=x_test,
@@ -69,7 +71,6 @@ class BaseNNModel:
             verbose=0
         )
 
-        print('\n---------------------------')
         print(f'{self.__class__.__name__}:')
         print('Loss: {}'.format(score))
         print('Accuracy: {}%'.format(round(100 * accuracy, 2)))

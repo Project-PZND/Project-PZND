@@ -1,5 +1,5 @@
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, ConfusionMatrixDisplay
+from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 import numpy as np
 import config as cfg
@@ -24,6 +24,8 @@ class KNNModel:
         x_train, y_train = self.flatten(train)
         x_test, y_test = self.flatten(test)
 
+        print('\nFitting KNNModel...')
+
         self.model.fit(x_train, y_train)
         y_pred = self.model.predict(x_test)
         accuracy = accuracy_score(y_test, y_pred)
@@ -33,9 +35,7 @@ class KNNModel:
                                       display_labels=cfg.Labels.label_mapping.keys())
         disp.plot()
         plt.title("KNNModel")
-        plt.show()
 
         print('\n---------------------------')
         print(f'{self.__class__.__name__}:')
-        print(classification_report(y_pred, y_test))
         print('Accuracy: {}%'.format(round(100 * accuracy, 2)))
