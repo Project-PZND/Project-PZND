@@ -6,7 +6,16 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 
 class BaseNNModel:
+    """
+        A base class for neural network models.
 
+        All parameters can be set in config.py.
+
+        Methods:
+        - train_model(train_data, validation_data, epochs): Trains the neural network model on training data.
+                      default values: validation_data = None, epochs = 10
+        - test_model(test_data): Evaluates the neural network model on test data, displaying a confusion matrix and metrics.
+    """
     def __init__(self):
         self.model = None
         self.history = None
