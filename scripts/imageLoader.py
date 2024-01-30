@@ -117,17 +117,18 @@ class ImageLoader:
 
     @staticmethod
     def _plot_helper(images, labels, num_of_rows, num_of_cols, class_names, cmap):
-        plt.figure()
         for i in range(num_of_rows * num_of_cols):
             px = images[i].numpy() if isinstance(images[i], tf.Tensor) else images[i]
             if max(px[0][0]) > 1:
                 px = px.astype('uint8')
+            if isinstance(images, np.ndarray):
+                px = px[..., ::-1]
             plt.subplot(num_of_rows, num_of_cols, i + 1)
             plt.imshow(px, cmap=cmap)
             plt.title(class_names[labels[i]])
             plt.axis("off")
 
-    def plot_images(self, dataset, num_of_rows=3, num_of_cols=3):
+    def plot_images(self, dataset, num_of_rows=5, num_of_cols=5):
         class_names = list(cfg.Labels.label_mapping.keys())
         if self.greyscale:
             cmap = 'gray'
