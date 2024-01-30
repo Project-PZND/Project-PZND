@@ -3,15 +3,9 @@ import config as cfg
 
 
 class ImageDataPreprocessor:
-    def __init__(self, target_size=(100, 100), normalize=True, augmentation=True):
+    def __init__(self, target_size=(100, 100), augmentation=True):
         self.target_size = target_size
-        self.normalize = normalize
         self.augmentation = augmentation
-
-    @staticmethod
-    def _normalize_image():
-        normalize = tf.keras.layers.Rescaling(1. / 255)
-        return normalize
 
     @staticmethod
     def _augment_image():
@@ -48,10 +42,6 @@ class ImageDataPreprocessor:
         if self.target_size:
             preprocess.add(self._resize_image())
 
-        # Normalize image
-        if self.normalize and isinstance(data, tf.data.Dataset):
-            preprocess.add(self._normalize_image())
-
         # Augment image
         if self.augmentation:
             preprocess.add(self._augment_image())
@@ -61,5 +51,7 @@ class ImageDataPreprocessor:
             preprocessed_data = data.map(lambda x, y: (preprocess(x, training=True), y))
         elif isinstance(data, (tuple, list)) and len(data) == 2:
             preprocessed_data = (preprocess(data[0]), data[1])
+
+        print('Processing data..')
 
         return preprocessed_data
