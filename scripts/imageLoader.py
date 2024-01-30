@@ -9,6 +9,34 @@ import matplotlib.pyplot as plt
 
 
 class ImageLoader:
+    """
+    A class for loading and preprocessing images.
+
+    All parameters can be set in config.py
+
+    Attributes:
+    - test_directory (str): The directory containing test images.
+    - train_directory (str): The directory containing training images.
+    - greyscale (bool): Flag indicating whether images should be loaded in greyscale (False by default).
+    - Images (list): List to store loaded images.
+    - Labels (list): List to store corresponding labels.
+
+    Methods:
+    - get_test_data(): Loads and returns test data in numpy array format.
+    - get_train_data(): Loads and returns training data in numpy array format.
+    - get_tensor_train(validation_split, batch_size, image_size): Loads and returns training data as a TensorFlow dataset.
+                       default values: validation_split = 0.2, batch_size = 32
+    - get_tensor_val(validation_split, batch_size, image_size): Loads and returns validation data as a TensorFlow dataset.
+                       default values: validation_split = 0.2, batch_size = 32
+    - get_tensor_test(batch_size, image_size): Loads and returns test data as a TensorFlow dataset.
+                       default values: batch_size = 32
+    - plot_images(dataset, num_of_rows, num_of_cols): Plots images from the given dataset.
+
+    Private Methods:
+    - _get_color_mode(grayscale): Returns the color mode for image loading.
+    - _get_data(directory): Loads and returns images and labels from the specified directory.
+    - _plot_helper(images, labels, num_of_rows, num_of_cols, class_names, cmap): Helper method for plotting images.
+    """
     def __init__(self, test_directory=cfg.Images.test_directory, train_directory=cfg.Images.train_directory,
                  greyscale=False):
         self.test_directory = test_directory

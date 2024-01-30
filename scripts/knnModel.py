@@ -6,7 +6,19 @@ import config as cfg
 
 
 class KNNModel:
+    """
+        A class for k-nearest neighbors (KNN) classifier model.
 
+        All parameters can be set in config.py
+
+        Attributes:
+        - k (int): The number of neighbors to consider (10 by default).
+        - model: The KNeighborsClassifier model with specified k value.
+
+        Methods:
+        - flatten(tensor_dataset): Flattens a TensorFlow dataset of images and labels into 1D arrays.
+        - evaluate(train, test): Evaluates the KNN model on training and test datasets, displaying confusion matrix and metrics.
+        """
     def __init__(self, k=10):
         self.k = k
         self.model = KNeighborsClassifier(n_neighbors=k)
