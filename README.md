@@ -27,15 +27,18 @@ The data consists of 2 separated datasets - for training and testing the models.
 
 ## How to run this project
 
-### Setting up virtual environment and installing requirements
-
-After cloning the repository set up virtual environment and install requirements:
-
-```bash
-python -m venv venv 
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-### Running the project
-Now all that is left to do is running main.py.
+1. Clone the git repository
+2. Enter the folder Project-PZND
+3. Download the data
+```dvc pull```
+4. Create virtual environment
+```python -m venv venv```
+5. Activate virtual environment
+```.\venv\Scripts\activate (z pycharma)``` 
+or
+```source venv/Scripts/activate (z terminala)```
+6. Install the necessary packages
+```pip install -r requirements.txt```
+7. Run the project
+```cd scripts```
+```python main.py```
