@@ -34,9 +34,8 @@ The data consists of 2 separated datasets - for training and testing the models.
 4. Create virtual environment
 ```python -m venv venv```
 5. Activate virtual environment
-```.\venv\Scripts\activate (z pycharma)``` 
-or
-```source venv/Scripts/activate (z terminala)```
+from PyCharm: ```.\venv\Scripts\activate```
+from terminal: ```source venv/Scripts/activate```
 6. Install the necessary packages
 ```pip install -r requirements.txt```
 7. Run the project
