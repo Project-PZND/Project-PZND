@@ -25,5 +25,5 @@ class AugmentImageParams:
 
 # Default size of loaded image (base images are 150x150 pixels)
 class ImageLoadSize:
-    height = 150
-    width = 150
+    height = 100
+    width = 100
