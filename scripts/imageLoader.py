@@ -37,6 +37,7 @@ class ImageLoader:
     - _get_data(directory): Loads and returns images and labels from the specified directory.
     - _plot_helper(images, labels, num_of_rows, num_of_cols, class_names, cmap): Helper method for plotting images.
     """
+
     def __init__(self, test_directory=cfg.Images.test_directory, train_directory=cfg.Images.train_directory,
                  greyscale=False):
         self.test_directory = test_directory
@@ -120,14 +121,15 @@ class ImageLoader:
             px = images[i].numpy() if isinstance(images[i], tf.Tensor) else images[i]
             if max(px[0][0]) > 1:
                 px = px.astype('uint8')
+            if isinstance(images, np.ndarray):
+                px = px[..., ::-1]
             plt.subplot(num_of_rows, num_of_cols, i + 1)
             plt.imshow(px, cmap=cmap)
             plt.title(class_names[labels[i]])
             plt.axis("off")
-        plt.show()
 
-    def plot_images(self, dataset, num_of_rows=3, num_of_cols=3):
-        class_names = cfg.Labels.label_mapping.keys()
+    def plot_images(self, dataset, num_of_rows=5, num_of_cols=5):
+        class_names = list(cfg.Labels.label_mapping.keys())
         if self.greyscale:
             cmap = 'gray'
         else:
